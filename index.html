@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Local Cloud Storage</title>
+</head>
+<body>
+<style>
+body {
+font-family: Arial, sans-serif;
+}
+
+.container {
+max-width: 800px;
+margin: 20px auto;
+padding: 20px;
+background-color: #f9f9f9;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+
+button {
+padding: 8px 15px;
+background-color: #007bff;
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+
+.file-item {
+margin: 5px 0;
+}
+
+a {
+text-decoration: none;
+color: #333;
+}
+</style>
+<div class="container">
+<h1>Local Cloud Storage</h1>
+<input type="file" id="file-input">
+<button id="upload-button">Upload File</button>
+<div id="file-list"></div>
+</div>
+<script>
+const fileInput = document.getElementById('file-input');
+const uploadButton = document.getElementById('upload-button');
+const fileList = document.getElementById('file-list');
+
+uploadButton.addEventListener('click', () => {
+const file = fileInput.files[0];
+const reader = new FileReader();
+
+reader.onload = function(event) {
+const fileContent = event.target.result;
+const fileName = file.name;
+
+// Save the file to local storage
+localStorage.setItem(fileName, fileContent);
+
+// Display the file in the list
+displayFile(fileName);
+};
+
+reader.readAsDataURL(file);
+});
+
+function displayFile(fileName) {
+const fileItem = document.createElement('div');
+fileItem.classList.add('file-item');
+const link = document.createElement('a');
+link.href = localStorage.getItem(fileName);
+link.textContent = fileName;
+fileItem.appendChild(link);
+fileList.appendChild(fileItem);
+}
+
+// Load previously uploaded files on page load
+for (let i = 0; i < localStorage.length; i++) {
+const fileName = localStorage.key(i);
+displayFile(fileName);
+}
+</script>
+</body>
+</html>
